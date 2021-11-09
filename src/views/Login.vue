@@ -5,28 +5,32 @@
       <div class="col-lg-6 col-md-8 offset-lg-3 offset-md-2">
         <form class="form-signin" @submit.prevent="login">
             <h2 class="form-signin-heading">Please sign in</h2>
-            <label for="inputEmail" class="sr-only">Email address</label>
-            <input
-                type="email"
-                id="inputEmail"
-                class="form-control"
-                placeholder="Email address"
-                v-model="email"
-            />
-            <label for="inputPassword" class="sr-only">Password</label>
-            <input
-                type="password"
-                id="inputPassword"
-                class="form-control"
-                placeholder="Password"
-                v-model="password"
-            />
-            <div class="checkbox">
+            <div class="mb-3">
+              <label for="inputEmail" class="sr-only">Email address</label>
+              <input
+                  type="email"
+                  id="inputEmail"
+                  class="form-control"
+                  placeholder="Email address"
+                  v-model="email"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="inputPassword" class="sr-only">Password</label>
+              <input
+                  type="password"
+                  id="inputPassword"
+                  class="form-control"
+                  placeholder="Password"
+                  v-model="password"
+              />      
+            </div>
+            <div class="checkbox mb-3">
                 <label>
-                <input type="checkbox" value="remember-me" /> Remember me
+                  <input type="checkbox" value="remember-me" /> Remember me
                 </label>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">
+            <button class="btn btn-primary btn-block" type="submit">
                 Sign in
             </button>
         </form>

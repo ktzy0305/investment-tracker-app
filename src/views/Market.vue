@@ -1,11 +1,11 @@
 <template>
-      <div class="container">
-      <div class="row mt-4">
-        <div class="listing col-lg-3 col-md-4 mb-3 d-flex align-items-stretch" v-for="listing in listings" v-bind:key="listing.symbol">
-          <Listing v-bind:listing="listing" />
-        </div>
+  <div class="container">
+    <div class="row mt-4">
+      <div class="listing col-lg-3 col-md-4 mb-3 d-flex align-items-stretch" v-for="listing in listings" v-bind:key="listing.symbol">
+        <Listing v-bind:listing="listing" />
       </div>
     </div>
+  </div>
 </template>
 
 <script>

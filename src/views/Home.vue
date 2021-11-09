@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <img alt="Vue logo" src="@/assets/logo.png">
+        <img alt="Vue logo" src="@/assets/logos/vue_logo.png">
         <HelloWorld/>
         <h1>Home</h1>
         <p>This is the Home component.</p>
@@ -18,5 +18,8 @@ export default {
 </script>
 
 <style>
-
+.home{
+    text-align: center;
+    margin-top: 30px;
+}
 </style>

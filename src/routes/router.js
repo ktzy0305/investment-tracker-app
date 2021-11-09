@@ -13,6 +13,11 @@ const router = new VueRouter({
       component: () => import("../views/Home.vue")
     },
     {
+      path: "/cats",
+      name: "cats",
+      component: () => import("../views/Cats.vue")
+    },
+    {
       path: "/login",
       name: "login",
       component: () => import("../views/Login.vue")
@@ -26,6 +31,16 @@ const router = new VueRouter({
       path: "/portfolio",
       name: "portfolio",
       component: () => import("../views/Portfolio.vue")
+    },
+    {
+      path: "/p2p",
+      name: "p2p",
+      component: () => import("../views/P2P.vue")
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: () => import("../views/Register.vue")
     }
   ]
 })
