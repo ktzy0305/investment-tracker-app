@@ -25,11 +25,11 @@
                     <router-link to="/cats" class="nav-item nav-link">Cats</router-link>
                 </div>
                 <div class="navbar-nav ms-auto mb-2 mb-lg-0" v-if="isLoggedIn">
-                    <router-link to="/" id="profile_btn" class="nav-item nav-link btn btn-primary mb-2 mb-lg-0 me-0 me-lg-2"><font-awesome-icon :icon="['fas', 'user-circle']" /> Profile</router-link>
+                    <router-link to="/" id="profile_btn" class="nav-item nav-link btn btn-primary mt-2 mt-lg-0 mb-2 mb-lg-0 me-0 me-lg-2"><font-awesome-icon :icon="['fas', 'user-circle']" /> Profile</router-link>
                     <button id="logout_btn" class="nav-item nav-link btn btn-danger" @click="logout"><font-awesome-icon :icon="['fas', 'sign-out-alt']" /> Log Out</button>
                 </div>
                 <div class="navbar-nav ms-auto mb-2 mb-lg-0" v-else>
-                    <router-link to="/login" id="login_btn" class="nav-item nav-link btn btn-primary text-white mb-2 mb-lg-0 me-0 me-lg-2">Login</router-link>
+                    <router-link to="/login" id="login_btn" class="nav-item nav-link btn btn-primary text-white mt-2 mt-lg-0 mb-2 mb-lg-0 me-0 me-lg-2">Login</router-link>
                     <router-link to="/register" id="register_btn" class="nav-item nav-link btn btn-outline-secondary">Register</router-link>
                 </div>
             </div>

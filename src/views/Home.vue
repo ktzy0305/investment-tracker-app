@@ -12,7 +12,7 @@
             </p>
             <div class="button-container">
               <a class="btn btn-primary me-3 px-4 py-3" href="">Get Started</a>
-              <a class="btn btn-light px-4 py-3" href="">Learn More</a>
+              <a class="btn btn-light px-4 py-3" href="#feature-section">Learn More</a>
             </div>
           </div>
           <div class="col-lg-6">
@@ -37,8 +37,8 @@
         </svg>
       </div>
     </section>
-    <section class="about-section bg-primary-accent">
-      <div class="container pt-5">
+    <section class="feature-section bg-primary-accent" id="feature-section">
+      <div class="container pt-4">
         <div class="row">
           <div class="col-lg-6">
             <img
@@ -46,7 +46,7 @@
               src="@/assets/images/mockup.png"
             />
           </div>
-          <div class="col-lg-6 text-white px-5">
+          <div class="col-lg-6 text-white px-5 v-align-middle">
             <h2 class="section-title">
               See what's happening with your investments
             </h2>
@@ -55,11 +55,6 @@
               your investments in real time, so you can see how your investments
               are doing from the day you bought them.
             </p>
-            <div class="button-container">
-              <a class="btn btn-light px-4 py-3 text-primary-accent" href=""
-                >About Us</a
-              >
-            </div>
           </div>
         </div>
       </div>
@@ -90,7 +85,7 @@ section {
   color: #850aff;
 }
 
-.main-message-container {
+.main-message-container, .v-align-middle {
   display: flex;
   flex-direction: column;
   justify-content: center;

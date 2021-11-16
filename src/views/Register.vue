@@ -5,6 +5,10 @@
       <div class="col-lg-6 offset-lg-3">
         <form class="form-horizontal" role="form" @submit.prevent>
           <h2 class="form-registration-heading">Create Your Account</h2>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert" v-for="(error, index) in errors" v-bind:key="error">
+            <span class="error-msg">{{ error }}</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="errors.splice(index, 1)"></button>
+          </div>
           <div class="mb-3">
             <label class="form-label" for="username">Username:</label>
             <div class="input-group">
@@ -75,7 +79,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -84,7 +88,18 @@ export default {
       email: '',
       password: '',
       password_confirmation: '',
+      errors: [],
     }
+  },
+
+  beforeMount() {
+    if(this.isLoggedIn) {
+      this.$router.push('/');
+    }
+  },
+
+  computed: {
+    ...mapGetters('account',['isLoggedIn', 'registrationError']),
   },
 
   methods: {
@@ -92,20 +107,21 @@ export default {
       'register',
     ]),
     checkForm() {
+      this.errors = []
       if (this.username.length < 3) {
-        alert('Username must be at least 3 characters long.');
+        this.errors.push('Username must be at least 3 characters long.')
         return;
       }
       if (this.email.length < 3) {
-        alert('Email must be at least 3 characters long.');
+        this.errors.push('Email must be at least 3 characters long.')
         return;
       }
       if (this.password.length < 8) {
-        alert('Password must be at least 8 characters long.');
+        this.errors.push('Password must be at least 8 characters long.')
         return;
       }
       if (this.password !== this.password_confirmation) {
-        alert('Passwords do not match.');
+        this.errors.push('Passwords do not match.')
         return;
       }
       const new_user = {
@@ -114,6 +130,18 @@ export default {
         password: this.password,
       };
       this.register(new_user);
+
+      if(this.registrationError){
+        this.errors.push(this.registrationError);
+      }
+    }
+  },
+
+  watch: {
+    registrationError(newVal) {
+      if(newVal !== null) {
+        this.errors.push(newVal);
+      }
     }
   }
 };

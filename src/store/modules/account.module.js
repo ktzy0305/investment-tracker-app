@@ -6,6 +6,7 @@ export const account = {
     state: {
         token: localStorage.getItem('token') || null,
         login_error: null,
+        registration_error: null,
     },
 
     getters: {
@@ -15,6 +16,10 @@ export const account = {
 
         loginError: state => {
             return state.login_error
+        },
+
+        registrationError: state => {
+            return state.registration_error
         }
     },
 
@@ -30,8 +35,15 @@ export const account = {
 
         "auth_logout"(state){
             state.token = null
-        }
+        },
 
+        "registration_error"(state, error_msg){
+            state.registration_error = error_msg
+        },
+
+        "registration_clear_error"(state){
+            state.registration_error = null
+        }
     },
 
     actions: {
@@ -52,8 +64,7 @@ export const account = {
                 .catch(error => {
                     commit("auth_error", error.response.data.message)
                     localStorage.removeItem('token')
-                })
-            
+                }) 
         },
 
         logout({ commit }) {
@@ -62,18 +73,22 @@ export const account = {
             router.push({path: '/'})
         },
 
-        register(user) {
+        register({ commit }, user) {
             const body = { 
                 username: user.username,
                 email: user.email,
                 password: user.password
             };
-            axios.post('http://127.0.0.1:3000/user/register', body)
+
+            console.log(body);
+            axios.post('http://127.0.0.1:3000/users', body)
             .then(response => {
-                console.log(response)
+                response.data
+                commit("registration_clear_error")
                 router.push({path: '/login'})
             })
             .catch(error => {
+                commit("registration_error", error.response.data.message)
                 console.log(error)
             })
         }
