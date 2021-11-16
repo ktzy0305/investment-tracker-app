@@ -23,9 +23,9 @@ const router = new VueRouter({
       component: () => import("../views/Login.vue")
     },
     {
-        path: "/market",
-        name: "market",
-        component: () => import("../views/Market.vue")
+      path: "/market",
+      name: "market",
+      component: () => import("../views/Market.vue")
     },
     {
       path: "/portfolio",
