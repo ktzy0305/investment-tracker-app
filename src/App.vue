@@ -112,6 +112,7 @@ html{
 
 .btn-primary {
   background-color: #850aff !important;
+  border: #850aff !important;
   color: #fff;
 }
 

@@ -1,8 +1,9 @@
 <template>
   <div class="container user-registration">
     <div class="row mt-4">
+      <MultiForm></MultiForm>
       <!-- User registration form -->
-      <div class="col-lg-6 offset-lg-3">
+      <!-- <div class="col-lg-6 offset-lg-3">
         <form class="form-horizontal" role="form" @submit.prevent>
           <h2 class="form-registration-heading">Create Your Account</h2>
           <div class="alert alert-danger alert-dismissible fade show" role="alert" v-for="(error, index) in errors" v-bind:key="error">
@@ -73,77 +74,82 @@
           </div>
           <button class="btn btn-primary" @click="checkForm()">Register</button>
         </form>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+// import { mapActions, mapGetters } from 'vuex'
+import MultiForm from '@/components/MultiForm'
 
 export default {
-  data() {
-    return {
-      username: '',
-      email: '',
-      password: '',
-      password_confirmation: '',
-      errors: [],
-    }
+  components: {
+    MultiForm
   },
 
-  beforeMount() {
-    if(this.isLoggedIn) {
-      this.$router.push('/');
-    }
-  },
+  // data() {
+  //   return {
+  //     username: '',
+  //     email: '',
+  //     password: '',
+  //     password_confirmation: '',
+  //     errors: [],
+  //   }
+  // },
 
-  computed: {
-    ...mapGetters('account',['isLoggedIn', 'registrationError']),
-  },
+  // beforeMount() {
+  //   if(this.isLoggedIn) {
+  //     this.$router.push('/');
+  //   }
+  // },
 
-  methods: {
-    ...mapActions('account',[
-      'register',
-    ]),
-    checkForm() {
-      this.errors = []
-      if (this.username.length < 3) {
-        this.errors.push('Username must be at least 3 characters long.')
-        return;
-      }
-      if (this.email.length < 3) {
-        this.errors.push('Email must be at least 3 characters long.')
-        return;
-      }
-      if (this.password.length < 8) {
-        this.errors.push('Password must be at least 8 characters long.')
-        return;
-      }
-      if (this.password !== this.password_confirmation) {
-        this.errors.push('Passwords do not match.')
-        return;
-      }
-      const new_user = {
-        username: this.username,
-        email: this.email,
-        password: this.password,
-      };
-      this.register(new_user);
+  // computed: {
+  //   ...mapGetters('account',['isLoggedIn', 'registrationError']),
+  // },
 
-      if(this.registrationError){
-        this.errors.push(this.registrationError);
-      }
-    }
-  },
+  // methods: {
+  //   ...mapActions('account',[
+  //     'register',
+  //   ]),
+  //   checkForm() {
+  //     this.errors = []
+  //     if (this.username.length < 3) {
+  //       this.errors.push('Username must be at least 3 characters long.')
+  //       return;
+  //     }
+  //     if (this.email.length < 3) {
+  //       this.errors.push('Email must be at least 3 characters long.')
+  //       return;
+  //     }
+  //     if (this.password.length < 8) {
+  //       this.errors.push('Password must be at least 8 characters long.')
+  //       return;
+  //     }
+  //     if (this.password !== this.password_confirmation) {
+  //       this.errors.push('Passwords do not match.')
+  //       return;
+  //     }
+  //     const new_user = {
+  //       username: this.username,
+  //       email: this.email,
+  //       password: this.password,
+  //     };
+  //     this.register(new_user);
 
-  watch: {
-    registrationError(newVal) {
-      if(newVal !== null) {
-        this.errors.push(newVal);
-      }
-    }
-  }
+  //     if(this.registrationError){
+  //       this.errors.push(this.registrationError);
+  //     }
+  //   }
+  // },
+
+  // watch: {
+  //   registrationError(newVal) {
+  //     if(newVal !== null) {
+  //       this.errors.push(newVal);
+  //     }
+  //   }
+  // }
 };
 </script>
 
