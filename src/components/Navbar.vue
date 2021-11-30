@@ -11,6 +11,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <div class="navbar-nav me-auto mb-2 mb-lg-0" v-if="isLoggedIn">
                     <router-link to="/" class="nav-item nav-link">Home</router-link>
+                    <router-link to="/portfolio" class="nav-item nav-link">Portfolio</router-link>
                     <router-link to="/market" class="nav-item nav-link">Markets</router-link>
                     <!-- <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

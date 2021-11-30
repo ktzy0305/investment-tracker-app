@@ -217,12 +217,12 @@ export default {
 
 <style>
     .animation-in {
-    transform-origin: left;
-    animation: in .6s ease-in-out;
+        transform-origin: left;
+        animation: in .6s ease-in-out;
     }
     .animation-out {
-    transform-origin: bottom left;
-    animation: out .6s ease-in-out;
+        transform-origin: bottom left;
+        animation: out .6s ease-in-out;
     }
 
     .step-title{
