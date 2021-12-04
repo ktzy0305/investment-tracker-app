@@ -80,7 +80,7 @@
     </div>
     <div class="row mb-3">
       <div class="col-12">
-        <button type="button" class="btn btn-primary w-100" @click="checkForm()">
+        <button type="button" class="btn btn-primary w-100" @click="addTransaction()">
           Add Transaction
         </button>
       </div>
@@ -89,6 +89,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
     data() {
         return {
@@ -110,58 +112,95 @@ export default {
     },
 
     methods: {
-        checkForm: function() {
+        ...mapActions([
+            'addTransaction',
+        ]),
+
+        addTransaction: function() {
+            if (this.checkForm()){
+              console.log('addTransaction');
+              const new_transaction = {
+                action: this.action,
+                asset: this.asset,
+                quantity: this.quantity,
+                price_per_unit: this.pricePerUnit,
+                fees: this.fees,
+                transaction_date: this.transactionDate,
+                notes: this.notes,
+              };
+              this.addTransaction(new_transaction);
+            }
+        },
+
+        checkAssetName: function() {
             var assetName = document.getElementById('assetName');
-            var quantity = document.getElementById('quantity');
-            var pricePerUnit = document.getElementById('pricePerUnit');
-            var pricePerUnitGroup = document.getElementById('pricePerUnitGroup');
             var assetError = document.getElementById('assetError');
-            var quantityError = document.getElementById('quantityError');
-            var pricePerUnitError = document.getElementById('pricePerUnitError');
             if (this.asset === '') {
                 console.log(assetName);
                 assetName.classList.add('is-invalid');
                 assetError.innerHTML = 'Please enter an asset name';
                 assetError.hidden = false;
+                return false;
             }
             else{
                 assetName.classList.remove('is-invalid');
                 assetError.innerHTML = '';
                 assetError.hidden = true;
+                return true;
             }
+        },
+
+        checkQuantity: function() {
+            var quantity = document.getElementById('quantity');
+            var quantityError = document.getElementById('quantityError');
             if (this.quantity === '') {
                 quantity.classList.add('is-invalid');
                 quantityError.innerHTML = 'Please enter a quantity';
                 quantityError.hidden = false;
+                return false;
             }
             else if(this.quantity <= 0){
                 quantity.classList.add('is-invalid');
                 quantityError.innerHTML = 'Quantity must be greater than 0';
                 quantityError.hidden = false;
+                return false;
             }
             else{
                 quantity.classList.remove('is-invalid');
                 quantityError.innerHTML = '';
                 quantityError.hidden = true;
+                return true;
             }
+        },
+        checkPricePerUnit: function() {
+            var pricePerUnit = document.getElementById('pricePerUnit');
+            var pricePerUnitGroup = document.getElementById('pricePerUnitGroup');
+            var pricePerUnitError = document.getElementById('pricePerUnitError');
             if (this.pricePerUnit === '') {
                 pricePerUnit.classList.add('is-invalid');
                 pricePerUnitGroup.classList.add('is-invalid');
                 pricePerUnitError.innerHTML = 'Please enter a price';
                 pricePerUnitError.hidden = false;
+                return false;
             }
             else if(this.pricePerUnit <= 0){
                 pricePerUnit.classList.add('is-invalid');
                 pricePerUnitGroup.classList.add('is-invalid');
                 pricePerUnitError.innerHTML = 'Price must be greater than $0';
                 pricePerUnitError.hidden = false;
+                return false;
             }
             else{
                 pricePerUnit.classList.remove('is-invalid');
                 pricePerUnitGroup.classList.remove('is-invalid');
                 pricePerUnitError.innerHTML = '';
                 pricePerUnitError.hidden = true;
+                return true;
             }
+        },
+
+        checkForm: function() {
+          return this.checkAssetName() && this.checkQuantity() && this.checkPricePerUnit();
         },
     },
 };
