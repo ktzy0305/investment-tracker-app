@@ -1,5 +1,6 @@
-import axios from "axios"
+// import axios from "axios"
 import router from "../../routes/router"
+import { auth } from "../../api/auth"
 
 export const account = {
     namespaced: true,
@@ -52,12 +53,11 @@ export const account = {
                 username: user.username,
                 password: user.password
             }
-            axios.post('http://127.0.0.1:3000/auth/login', body)
+            auth.login(body)
                 .then(response => {
                     response.data["access_token"]
                     const token = response.data["access_token"]
                     localStorage.setItem('token', token)
-                    axios.defaults.headers.common['Authorization'] = token
                     commit("auth_success", token)
                     router.push({path: '/'})
                 })
@@ -81,7 +81,8 @@ export const account = {
             };
 
             console.log(body);
-            axios.post('http://127.0.0.1:3000/users', body)
+            // axios.post('http://127.0.0.1:3000/users', body)
+            auth.register(body)
             .then(response => {
                 response.data
                 commit("registration_clear_error")

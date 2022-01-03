@@ -1,20 +1,39 @@
-import axios from "axios";
+import { api } from "../../api";
 
 export const portfolio = {
     namespaced: true,
     state: {
-        assets: [],
+        transactions: [],
+        transaction_result: "",
+    },
+    getters: {
+        getTransactions: state => state.transactions,
     },
     mutations: {
-        "add_transaction": (state, payload) => {
+        "buy_transaction": (state, payload) => {
+            state.assets.push(payload);
+        },
+        "transaction_error": (state, payload) => {
             state.assets.push(payload);
         }
     },
     actions: {
-        addTransaction({ commit }, transaction) {
-            const body = transaction;
-            commit('add_transaction', body);
-            return axios.post('/transactions', body);
+        getTransactions({ state }) {
+            api.getTransactions().then(response => {
+                state.transactions = response.data;
+            });
+        },
+
+        addTransaction({ state }, transaction) {
+            api.addTransaction(transaction, localStorage.getItem("token"))
+            .then(response => {
+                state.transaction_result = response.data;
+            })
+            .catch(error => {
+                state.transaction_result = error.response.data;
+                console.log("Problem with transaction: ", error);
+                console.log(error);
+            });
         }
     }
 }

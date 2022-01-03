@@ -80,7 +80,7 @@
     </div>
     <div class="row mb-3">
       <div class="col-12">
-        <button type="button" class="btn btn-primary w-100" @click="addTransaction()">
+        <button type="button" class="btn btn-primary w-100" @click="addNewTransaction()">
           Add Transaction
         </button>
       </div>
@@ -99,7 +99,7 @@ export default {
             quantity: '',
             pricePerUnit: '',
             notes: '',
-            transactionDate: '',
+            transactionDate: Date.now(),
             fees: 0,
         };
     },
@@ -112,13 +112,12 @@ export default {
     },
 
     methods: {
-        ...mapActions([
-            'addTransaction',
+        ...mapActions('portfolio',[
+          'addTransaction',
         ]),
 
-        addTransaction: function() {
+        addNewTransaction: function() {
             if (this.checkForm()){
-              console.log('addTransaction');
               const new_transaction = {
                 action: this.action,
                 asset: this.asset,
@@ -129,6 +128,7 @@ export default {
                 notes: this.notes,
               };
               this.addTransaction(new_transaction);
+              this.$emit('close');
             }
         },
 

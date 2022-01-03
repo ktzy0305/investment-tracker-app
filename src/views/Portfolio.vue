@@ -84,6 +84,7 @@
 
 <script>
 import TransactionForm from '../components/TransactionForm.vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -92,12 +93,27 @@ export default {
   data() {
     return {
       showTransactionForm: false,
+      transactions: [],
     };
   },
+  computed: {
+    ...mapGetters('portfolio', [
+      'getTransactions',
+    ]),
+
+  },
   methods: {
+    ...mapActions('portfolio',[
+      'getTransactions',
+    ]),
+
     toggleTransactionForm() {
       this.showTransactionForm = !this.showTransactionForm;
     },
+  },
+
+  beforeMount() {
+    this.transactions = this.getTransactions();
   },
 };
 
