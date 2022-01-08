@@ -7,7 +7,7 @@
           class="btn-check"
           name="btnAction"
           id="btnBuy"
-          value="buy"
+          value="BUY"
           v-model="action"
           autocomplete="off"
           checked
@@ -18,7 +18,7 @@
           class="btn-check"
           name="btnAction"
           id="btnSell"
-          value="sell"
+          value="SELL"
           v-model="action"
           autocomplete="off"
         />
@@ -72,8 +72,8 @@
       <div class="col-12">
         <div class="card border-transparent">
           <div class="card-body bg-grey">
-            <div>Total Spent</div>
-            <h4 class="fw-bolder">$ {{ totalSpent }}</h4>
+            <div>Total Amount</div>
+            <h4 class="fw-bolder">$ {{ totalTransactionAmount }}</h4>
           </div>
         </div>
       </div>
@@ -94,7 +94,7 @@ import { mapActions } from 'vuex'
 export default {
     data() {
         return {
-            action: 'buy',
+            action: 'BUY',
             asset: '',
             quantity: '',
             pricePerUnit: '',
@@ -105,9 +105,9 @@ export default {
     },
 
     computed: {
-        totalSpent: function() {
-            var totalSpent = this.quantity * this.pricePerUnit + this.fees;
-            return totalSpent.toFixed(2);
+        totalTransactionAmount: function() {
+            var totalTransactionAmount = this.quantity * this.pricePerUnit + this.fees;
+            return totalTransactionAmount.toFixed(2);
         },
     },
 

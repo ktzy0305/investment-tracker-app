@@ -10,17 +10,23 @@ export const portfolio = {
         getTransactions: state => state.transactions,
     },
     mutations: {
-        "buy_transaction": (state, payload) => {
-            state.assets.push(payload);
+        "SET_TRANSACTION": (state, payload) => {
+            state.transactions = payload;
         },
         "transaction_error": (state, payload) => {
             state.assets.push(payload);
         }
     },
     actions: {
-        getTransactions({ state }) {
+        getAllTransactions({ commit }) {
             api.getTransactions().then(response => {
-                state.transactions = response.data;
+                commit("SET_TRANSACTION", response.data);
+            });
+        },
+
+        getUserTransactions({ commit }) {
+            api.getUserTransactions(localStorage.getItem("token")).then(response => {
+                commit("SET_TRANSACTION", response.data);
             });
         },
 

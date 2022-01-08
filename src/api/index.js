@@ -15,8 +15,12 @@ export const api = {
         }
     },
 
-    getTransactions(token) {
-        return this.req.get("/transactions", this.options(token));
+    getTransactions() {
+        return this.req.get("/transactions");
+    },
+
+    getUserTransactions(token) {
+        return this.req.get("/transactions/user", this.options(token));
     },
 
     addTransaction(body, token){

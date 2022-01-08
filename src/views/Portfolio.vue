@@ -9,7 +9,7 @@
               <div class="row">
                 <div class="col-sm-10 col-9">
                   <div class="h4">Current Value</div>
-                  <div class="h2 fw-bolder">$38,266.22</div>
+                  <div class="h2 fw-bolder">$38,266.22 / ${{ totalValue }}</div>
                   <div class="h5">$1912.02 (24h)</div>
                 </div>
                 <div class="col">
@@ -36,6 +36,24 @@
               </tr>
             </thead>
             <tbody>
+              <tr v-for="transaction in transactions" v-bind:key="transaction._id">
+                <td>
+                  <div class="row">
+                    <div class="col-sm-2 col-2">
+                      <img class="img-fluid" src="https://via.placeholder.com/100x100" alt="">
+                    </div>
+                    <div class="col-sm-10 col-10">
+                      <div class="h5">{{ transaction.asset }}</div>
+                      <div class="h6">{{ transaction.action }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>${{ transaction.price_per_unit.toFixed(2) }}</td>
+                <td>
+                  <div>${{ (transaction.price_per_unit * transaction.quantity).toFixed(2) }}</div>
+                  <div>{{ transaction.quantity }} Unit(s)</div>
+                </td>
+              </tr>
               <tr>
                 <td>Apple (AAPL)</td>
                 <td>$152.11</td>
@@ -93,7 +111,6 @@ export default {
   data() {
     return {
       showTransactionForm: false,
-      transactions: [],
     };
   },
   computed: {
@@ -101,10 +118,21 @@ export default {
       'getTransactions',
     ]),
 
+    transactions() {
+      return this.getTransactions;
+    },
+
+    totalValue(){
+      return this.transactions.reduce((total, transaction) => {
+        return total + (transaction.price_per_unit * transaction.quantity);
+      }, 0);
+    },
   },
+
   methods: {
-    ...mapActions('portfolio',[
-      'getTransactions',
+    ...mapActions('portfolio', [
+      'getAllTransactions',
+      'getUserTransactions',
     ]),
 
     toggleTransactionForm() {
@@ -112,9 +140,11 @@ export default {
     },
   },
 
+
   beforeMount() {
-    this.transactions = this.getTransactions();
+    this.getUserTransactions();
   },
+
 };
 
 </script>

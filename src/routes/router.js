@@ -38,6 +38,11 @@ const router = new VueRouter({
       component: () => import("../views/P2P.vue")
     },
     {
+      path: "/transactions",
+      name: "tranasctions",
+      component: () => import("../views/Transactions.vue")
+    },
+    {
       path: "/register",
       name: "register",
       component: () => import("../views/Register.vue")
