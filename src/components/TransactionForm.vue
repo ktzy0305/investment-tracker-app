@@ -128,7 +128,8 @@ export default {
                 notes: this.notes,
               };
               this.addTransaction(new_transaction);
-              this.$emit('close');
+              // Reload portfolio page
+              this.$router.go();
             }
         },
 

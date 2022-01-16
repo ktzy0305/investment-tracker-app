@@ -58,9 +58,9 @@ export default {
         ])
     },
     mounted() {
-        if(this.isLoggedIn) {
-            this.$router.push('/')
-        }
+        // if(this.isLoggedIn) {
+        //     this.$router.push('/')
+        // }
     }
 }
 

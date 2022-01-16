@@ -9,7 +9,7 @@
               <div class="row">
                 <div class="col-sm-10 col-9">
                   <div class="h4">Current Value</div>
-                  <div class="h2 fw-bolder">$38,266.22 / ${{ totalValue }}</div>
+                  <div class="h2 fw-bolder">$38,266.22 / ${{ totalValue.toFixed(2) }}</div>
                   <div class="h5">$1912.02 (24h)</div>
                 </div>
                 <div class="col">

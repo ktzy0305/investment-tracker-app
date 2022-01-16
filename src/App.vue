@@ -2,57 +2,51 @@
   <div id="app">
     <Navbar/>
     <router-view></router-view>
+    <v-idle
+      :events="['mousemove']" 
+      :duration="1800"
+      :reminders="[300, 60]"
+      @idle="onidle" 
+      @remind="onremind"
+      v-if="isLoggedIn"
+      hidden
+    />
   </div>
 </template>
 
 <script>
 import Navbar from "./components/Navbar.vue";
-// var yahooFinance = require('yahoo-finance');
-
-
-// function getListings(){
-//   var httpRequestOptions = {
-//     proxy: 'http://localhost:8081'
-//   };
-
-//   yahooFinance.quote({
-//     symbol: "AAPL,GOOG,MSFT,AMZN,FB,TWTR,NFLX,TSLA,BABA,BA",
-//     modules: ["price"]
-//   },httpRequestOptions, function(err, quotes){
-//     if(err){
-//       console.log(err);
-//     }
-//     else{
-//       return quotes;
-//     }
-//   });
-// }
-
-// console.log(getListings())
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "App",
   components: {
     Navbar,
   },
-  methods(){
-    return {
-      // getListings: function(){
-      //   var self = this;
-      //   yahooFinance.quote({
-      //     symbol: "AAPL,GOOG,MSFT,AMZN,FB,TWTR,NFLX,TSLA,BABA,BA",
-      //     modules: ["price"]
-      //   }, function(err, quotes){
-      //     if(err){
-      //       console.log(err);
-      //     }
-      //     else{
-      //       self.listings = quotes;
-      //       return quotes;
-      //     }
-      //   });
-      // }
-    }
+  computed: {
+    ...mapGetters("account", ["isLoggedIn"]),
+  },
+  methods:{
+    ...mapActions("account", ["logout"]),
+    onidle(){
+      this.logout();
+      this.$swal({
+        title: "You have been logged out",
+        text: "For security reasons you are automatically logged out when you have been inactive for 30 minutes. If you like to continue using the app, please log in again.",
+        icon: "info",
+        confirmButtonColor: "#850aff",
+        confirmButtonText: "OK"
+      });
+    },
+    onremind(time){
+      this.$swal({
+        title: "You have been idle for too long",
+        text: `You will be logged out in ${time/60} minute(s)`,
+        icon: "warning",
+        confirmButtonColor: "#850aff",
+        confirmButtonText: "OK"
+      });
+    },
   },
 };
 </script>
