@@ -27,7 +27,7 @@ export default {
     ...mapGetters("account", ["isLoggedIn"]),
   },
   methods:{
-    ...mapActions("account", ["logout"]),
+    ...mapActions("account", ["logout", "verifyToken"]),
     onidle(){
       this.logout();
       this.$swal({
@@ -47,6 +47,13 @@ export default {
         confirmButtonText: "OK"
       });
     },
+  },
+  beforeMount() {
+    if(this.isLoggedIn){
+      if(!this.verifyToken()){
+        this.logout();
+      }
+    }
   },
 };
 </script>

@@ -92,7 +92,20 @@ export const account = {
                 commit("registration_error", error.response.data.message)
                 console.log(error)
             })
+        },
+
+        verifyToken({ commit }) {
+            const token = localStorage.getItem('token')
+            auth.verifyToken(token)
+                .then(response => {
+                    response.data
+                    commit("auth_success", token)
+                    return true
+                })
+                .catch(error => {
+                    console.log(error)
+                    return false
+                })
         }
     },
-    
 }
