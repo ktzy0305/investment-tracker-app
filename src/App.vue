@@ -50,9 +50,7 @@ export default {
   },
   beforeMount() {
     if(this.isLoggedIn){
-      if(!this.verifyToken()){
-        this.logout();
-      }
+      this.verifyToken();
     }
   },
 };

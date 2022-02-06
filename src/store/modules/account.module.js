@@ -96,15 +96,20 @@ export const account = {
 
         verifyToken({ commit }) {
             const token = localStorage.getItem('token')
+            var not_expired = false;
             auth.verifyToken(token)
                 .then(response => {
                     response.data
                     commit("auth_success", token)
-                    return true
+                    not_expired = true
                 })
                 .catch(error => {
-                    console.log(error)
-                    return false
+                    console.log(error.response.data.message)
+                })
+                .finally(() => {
+                    if (!not_expired) {
+                        this.logout
+                    }
                 })
         }
     },

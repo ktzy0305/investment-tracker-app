@@ -57,11 +57,6 @@ export default {
             'logout'
         ])
     },
-    mounted() {
-        // if(this.isLoggedIn) {
-        //     this.$router.push('/')
-        // }
-    }
 }
 
 </script>
