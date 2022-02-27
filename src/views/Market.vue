@@ -4,8 +4,13 @@
       <div class="listing col-lg-3 col-md-4 mb-3 d-flex align-items-stretch" v-for="listing in listings" v-bind:key="listing.symbol">
         <Listing v-bind:listing="listing" />
       </div>
-      <div>
-        {{ market_data["Time Series (1min)"] }}
+      <div v-for="data in market_data" v-bind:key="data.symbol">
+        <div>
+          {{ data.symbol }}
+        </div>
+        <div>
+          ${{ data.price }}
+        </div>
       </div>
     </div>
   </div>
@@ -63,19 +68,63 @@ export default {
             price: 668.42,
           },
         ],
-        market_data: {},
+        market_data: [],
+        symbols: [
+          // "AAPL",
+          "MSFT",
+          // "TSLA",
+          // "FB",
+          // "SPY",
+          // "QQQ",
+          // "SE",
+          // "AMD",
+          // "NFLX",
+        ],
       };
     },
     methods: {
       async fetchData() {
-        alphaVantageHelper.getIntraday(`msft`).then((data) => {
-          console.log(data);
-          this.market_data = data;
-        })
+        for (let i = 0; i < this.symbols.length; i++) {
+          const symbol = this.symbols[i];
+          const data = await alphaVantageHelper.getDaily(symbol);
+          // let data_symbol = data["Meta Data"]["2. Symbol"];
+          let dates = Object.keys(data["Time Series (Daily)"]);
+          let numDates = dates.length;
+          let price = parseFloat(data["Time Series (Daily)"][dates[numDates-1]]["4. close"]).toFixed(2);
+          let stock_data = {
+            symbol: symbol,
+            price: price,
+          };
+          this.market_data.push(stock_data);
+        }
+        // alphaVantageHelper.getDaily(`msft`).then((data) => {
+        //   console.log(data);
+        //   let symbol = data["Meta Data"]["2. Symbol"];
+        //   let dates = Object.keys(data["Time Series (Daily)"]);
+        //   let numDates = dates.length;
+        //   let price = parseFloat(data["Time Series (Daily)"][dates[numDates-1]]["4. close"]).toFixed(2);
+        //   data = {
+        //     symbol: symbol,
+        //     price: price,
+        //   };
+        //   this.market_data.push(data);
+        // })
+      },
+
+      async displayMarketData() {
+        for (let i = 0; i < this.listings.length; i++) {
+          let listing = this.listings[i];
+          alphaVantageHelper.getDaily(listing.symbol).then((data)=>{
+            let dates = Object.keys(data["Time Series (Daily)"]);
+            let numDates = dates.length;
+            listing.price = parseFloat(data["Time Series (Daily)"][dates[numDates-1]]["4. close"]).toFixed(2);
+          });
+        }
       },
     },
     mounted() {
       this.fetchData();
+      this.displayMarketData();
     },
 }
 </script>

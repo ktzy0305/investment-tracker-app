@@ -9,4 +9,6 @@ export const alphaVantageHelper = {
     getIntraday: (symbol, interval) => {
         return alphaVantage.data.intraday(symbol, interval);
     },
+
+    
 }
