@@ -1,5 +1,9 @@
 # investment-tracker-app
 
+## Required services for this app to work
+- [Investment Tracker API](https://github.com/ktzy0305/investment-tracker-api)
+- [CORS Anywhere](https://github.com/Rob--W/cors-anywhere/) 
+
 ## Project setup
 ```
 npm install

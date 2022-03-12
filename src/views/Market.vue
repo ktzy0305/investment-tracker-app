@@ -18,7 +18,9 @@
 
 <script>
 import Listing from "@/components/Listing.vue";
-import { alphaVantageHelper } from "@/api/alphavantagehelper";
+// import { alphaVantageHelper } from "@/api/alphavantagehelper";
+// import yahooFinance from "yahoo-finance2";
+const yahooFinance = require("yahoo-finance");
 
 export default {
     components: {
@@ -70,33 +72,34 @@ export default {
         ],
         market_data: [],
         symbols: [
-          // "AAPL",
+          "AAPL",
           "MSFT",
-          // "TSLA",
-          // "FB",
-          // "SPY",
-          // "QQQ",
-          // "SE",
-          // "AMD",
-          // "NFLX",
+          "TSLA",
+          "FB",
+          "SPY",
+          "QQQ",
+          "SE",
+          "AMD",
+          "NFLX",
         ],
       };
     },
     methods: {
       async fetchData() {
-        for (let i = 0; i < this.symbols.length; i++) {
-          const symbol = this.symbols[i];
-          const data = await alphaVantageHelper.getDaily(symbol);
-          // let data_symbol = data["Meta Data"]["2. Symbol"];
-          let dates = Object.keys(data["Time Series (Daily)"]);
-          let numDates = dates.length;
-          let price = parseFloat(data["Time Series (Daily)"][dates[numDates-1]]["4. close"]).toFixed(2);
-          let stock_data = {
-            symbol: symbol,
-            price: price,
-          };
-          this.market_data.push(stock_data);
-        }
+        // for (let i = 0; i < this.symbols.length; i++) {
+        //   const symbol = this.symbols[i];
+        //   const data = await alphaVantageHelper.getDaily(symbol);
+        //   // let data_symbol = data["Meta Data"]["2. Symbol"];
+        //   let dates = Object.keys(data["Time Series (Daily)"]);
+        //   let numDates = dates.length;
+        //   let price = parseFloat(data["Time Series (Daily)"][dates[numDates-1]]["4. close"]).toFixed(2);
+        //   let stock_data = {
+        //     symbol: symbol,
+        //     price: price,
+        //   };
+        //   this.market_data.push(stock_data);
+        // }
+
         // alphaVantageHelper.getDaily(`msft`).then((data) => {
         //   console.log(data);
         //   let symbol = data["Meta Data"]["2. Symbol"];
@@ -109,17 +112,54 @@ export default {
         //   };
         //   this.market_data.push(data);
         // })
+
+        for (let i = 0; i < this.symbols.length; i++) {
+          const symbol = this.symbols[i];
+          yahooFinance.quote({
+            symbol: symbol,
+            modules: ["price"],
+          }).then((quote) => {
+            let price = quote.price.regularMarketPrice;
+            let stock_data = {
+              symbol: symbol,
+              price: price,
+            };
+            this.market_data.push(stock_data);
+          });
+        }
       },
 
       async displayMarketData() {
-        for (let i = 0; i < this.listings.length; i++) {
+        // Alpha Vantage API
+
+        // for (let i = 0; i < 3; i++) {
+        //   let listing = this.listings[i];
+        //   alphaVantageHelper.getDaily(listing.symbol).then((data)=>{
+        //     let dates = Object.keys(data["Time Series (Daily)"]);
+        //     let numDates = dates.length;
+        //     listing.price = parseFloat(data["Time Series (Daily)"][dates[numDates-1]]["4. close"]).toFixed(2);
+        //   });
+        // }
+
+        // Yahoo Finance V1
+
+        for(let i = 0; i < this.listings.length; i++){
           let listing = this.listings[i];
-          alphaVantageHelper.getDaily(listing.symbol).then((data)=>{
-            let dates = Object.keys(data["Time Series (Daily)"]);
-            let numDates = dates.length;
-            listing.price = parseFloat(data["Time Series (Daily)"][dates[numDates-1]]["4. close"]).toFixed(2);
+          yahooFinance.quote({
+            symbol: listing.symbol,
+            modules: ['price'], // see the docs for the full list
+          }).then(quote => {
+            listing.price = quote.price.regularMarketPrice.toFixed(2);
           });
         }
+
+        // Yahoo Finance V2
+
+        // for(let i = 0; i < this.listings.length; i++) {
+        //   let listing = this.listings[i];
+        //   const result = await yahooFinance.quote(listing.symbol);
+        //   listing.price = result.regularMarketPrice;
+        // }
       },
     },
     mounted() {
