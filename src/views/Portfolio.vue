@@ -10,10 +10,30 @@
                 <div class="col-sm-10 col-9">
                   <div class="h4">Current Value</div>
                   <div class="h2 fw-bolder">${{ totalValue.toFixed(2) }}</div>
-                  <div class="h5">$1912.02 (24h)</div>
+                  <div class="h5">
+                    <div v-if="totalCurrentValue > totalValue">
+                      <span class="text-success">+${{ (totalCurrentValue - totalValue).toFixed(2) }}</span>
+                    </div>
+                    <div v-else-if="totalCurrentValue < totalValue">
+                      <span class="text-danger">-${{ Math.abs(totalCurrentValue - totalValue).toFixed(2) }}</span>
+                    </div>
+                    <div v-else>
+                      <span class="text-muted">${{ (totalCurrentValue - totalValue).toFixed(2) }}</span>
+                    </div>
+                  </div>
                 </div>
                 <div class="col">
-                  <h4><span class="badge bg-success">+5.26%</span></h4>
+                  <h4>
+                    <div v-if="((totalCurrentValue-totalValue)/totalValue)*100 > 0">
+                      <span class="badge bg-success">+{{(((totalCurrentValue-totalValue)/totalValue)*100).toFixed(2)}}%</span>
+                    </div>
+                    <div v-else-if="((totalCurrentValue-totalValue)/totalValue)*100 < 0">
+                      <span class="badge bg-danger">{{(((totalCurrentValue-totalValue)/totalValue)*100).toFixed(2)}}%</span>
+                    </div>
+                    <div v-else>
+                      <span class="badge bg-muted">{{(((totalCurrentValue-totalValue)/totalValue)*100).toFixed(2)}}%</span>
+                    </div>
+                  </h4>
                 </div>
               </div>
             </div>
@@ -31,8 +51,10 @@
             <thead>
               <tr>
                 <th>Asset</th>
-                <th>Price</th>
+                <th>Cost Price</th>
+                <th>Current Price</th>
                 <th>Holdings</th>
+                <th>PNL</th>
               </tr>
             </thead>
             <tbody>
@@ -48,35 +70,23 @@
                   </div>
                 </td>
                 <td>${{ asset.price_per_unit.toFixed(2) }}</td>
+                <td>${{ asset.current_price }}</td>
                 <td>
                   <div>${{ asset.holdings.toFixed(2) }}</div>
                   <div>{{ asset.quantity }} Unit(s)</div>
                 </td>
-              </tr>
-              <!-- <tr>
-                <td>Apple (AAPL)</td>
-                <td>$152.11</td>
                 <td>
-                  <div>$24338.45</div>
-                  <div>160 Unit(s)</div>
+                  <div v-if="((asset.current_price*asset.quantity) - asset.holdings) > 0">
+                    <span class="text-success">+${{ ((asset.current_price*asset.quantity) - asset.holdings).toFixed(2) }}</span>
+                  </div>
+                  <div v-else-if="((asset.current_price*asset.quantity) - asset.holdings) < 0">
+                    <span class="text-danger">-${{ Math.abs((asset.current_price*asset.quantity) - asset.holdings).toFixed(2) }}</span>
+                  </div>
+                  <div v-else>
+                    <span class="text-grey">$0.00</span>
+                  </div>
                 </td>
               </tr>
-              <tr>
-                <td>Ethereum</td>
-                <td>$3982.42</td>
-                <td>
-                  <div>$9941.06</div>
-                  <div>2 ETH</div>
-                </td>
-              </tr>
-              <tr>
-                <td>Invesco QQQ Trust Series</td>
-                <td>$398.67</td>
-                <td>
-                  <div>$3986.70</div>
-                  <div>10 Unit(s)</div>
-                </td>
-              </tr> -->
             </tbody>
           </table>
         </div>
@@ -102,6 +112,7 @@
 <script>
 import TransactionForm from '../components/TransactionForm.vue';
 import { mapActions, mapGetters } from 'vuex';
+const yahooFinance = require("yahoo-finance");
 
 export default {
   components: {
@@ -109,6 +120,7 @@ export default {
   },
   data() {
     return {
+      assets: [],
       showTransactionForm: false,
     };
   },
@@ -117,45 +129,18 @@ export default {
       'getTransactions',
     ]),
 
-    assets(){
-      var transactions = this.getTransactions;
-      // const assets = [...new Set(transactions.map(transaction => transaction.asset))];
-      var assets = [];
-      transactions.forEach(element => {
-        if (assets.map(asset => asset.asset).indexOf(element.asset) === -1) {
-          assets.push({
-            asset: element.asset,
-            price_per_unit: element.price_per_unit,
-            quantity: element.quantity,
-            holdings: (element.price_per_unit * element.quantity),
-          });
-        }
-        else{
-          assets.forEach(asset => {
-            if(asset.asset === element.asset){
-              asset.price_per_unit = ((asset.price_per_unit * asset.quantity) + (element.price_per_unit * element.quantity)) / (asset.quantity + element.quantity);
-              if (element.action === 'BUY') {
-                asset.quantity += element.quantity;
-                asset.holdings = asset.holdings + (element.price_per_unit * element.quantity);
-              }
-              else if (element.action === 'SELL') {
-                asset.quantity -= element.quantity;
-                asset.holdings = asset.quantity * asset.price_per_unit;
-              }
-            }
-          });
-        }
-      });
-      // console.log(assets)
-      // console.log(transactions);
-      return assets;
-    },
-
     totalValue(){
       return this.assets.reduce((total, asset) => {
         return total + (asset.holdings);
       }, 0);
     },
+
+    totalCurrentValue(){
+      return this.assets.reduce((total, asset) => {
+        return total + (asset.current_price * asset.quantity);
+      }, 0);
+    },
+    
   },
 
   methods: {
@@ -164,21 +149,65 @@ export default {
       'getUserTransactions',
     ]),
 
+    calculateAssets(){
+      console.log("running calculateAssets");
+      var transactions = this.getTransactions;
+      // const assets = [...new Set(transactions.map(transaction => transaction.asset))];    
+      transactions.forEach(element => {
+        if (this.assets.map(asset => asset.asset).indexOf(element.asset) === -1) {
+          let new_asset = {
+            asset: element.asset,
+            price_per_unit: element.price_per_unit,
+            current_price: 0,
+            holdings: (element.price_per_unit * element.quantity),
+            quantity: element.quantity,
+          };
+          yahooFinance.quote({
+            symbol: element.asset,
+            modules: ['price'],
+          }).then(quote => {
+            console.log(quote.price.regularMarketPrice);
+            new_asset.current_price = quote.price.regularMarketPrice;
+          });
+          console.log(new_asset);
+          this.assets.push(new_asset);
+        }
+        else{
+          this.assets.forEach(asset => {
+            if(asset.asset === element.asset){
+              if (element.action === 'BUY') {
+                asset.price_per_unit = ((asset.price_per_unit * asset.quantity) + (element.price_per_unit * element.quantity)) / (asset.quantity + element.quantity);
+                asset.quantity += element.quantity;
+                asset.holdings = asset.holdings + (element.price_per_unit * element.quantity);
+              }
+              else if (element.action === 'SELL') {
+                asset.price_per_unit = ((asset.price_per_unit * asset.quantity) - (element.price_per_unit * element.quantity)) / (asset.quantity - element.quantity);
+                asset.quantity -= element.quantity;
+                asset.holdings = (asset.quantity * asset.price_per_unit);
+              }
+            }
+          });
+        }
+      });
+    },
+
     toggleTransactionForm() {
       this.showTransactionForm = !this.showTransactionForm;
     },
   },
 
-
   beforeMount() {
-    this.getUserTransactions();
+    this.getUserTransactions().then(()=>{
+      console.log("Complete")
+      this.calculateAssets();
+    });
   },
 
   mounted() {
-    this.assets;
   },
 
 };
+
 
 </script>
 

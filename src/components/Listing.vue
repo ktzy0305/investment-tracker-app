@@ -1,7 +1,7 @@
 <template>
     <div class="card w-100">
         <div class="card-header">
-            <h5 class="card-title">{{ listing.name }} ({{listing.symbol}})</h5>
+            <div class="card-title">{{ listing.name }} ({{listing.symbol}})</div>
         </div>
         <div class="card-body">
             <p class="card-text">
@@ -11,7 +11,7 @@
                     </span>
                 </small>
             </p>
-            <button class="btn btn-primary" @click="$emit('buy', listing)">Buy</button>
+            <!-- <button class="btn btn-primary" @click="$emit('buy', listing)">Buy</button> -->
         </div>
     </div>
 </template>
@@ -28,6 +28,9 @@ export default {
 }
 </script>
 
-<style>
-/* No styles af of yet */
-</style>
+<style scoped>
+.card-title{
+    font-size: 1.025rem;
+    font-weight: 800;
+}
+</style>>

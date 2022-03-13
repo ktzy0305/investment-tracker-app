@@ -104,7 +104,7 @@ export default {
                         }
                         else if (element.action === 'SELL') {
                             asset.quantity -= element.quantity;
-                            asset.holdings -= element.quantity * (element.price_per_unit - asset.price_per_unit);
+                            asset.holdings -= (element.quantity * (element.price_per_unit - asset.price_per_unit));
                         }
                     }
                 })

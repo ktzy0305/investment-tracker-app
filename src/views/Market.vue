@@ -4,14 +4,6 @@
       <div class="listing col-lg-3 col-md-4 mb-3 d-flex align-items-stretch" v-for="listing in listings" v-bind:key="listing.symbol">
         <Listing v-bind:listing="listing" />
       </div>
-      <div v-for="data in market_data" v-bind:key="data.symbol">
-        <div>
-          {{ data.symbol }}
-        </div>
-        <div>
-          ${{ data.price }}
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -30,29 +22,44 @@ export default {
       return {
         listings: [
           {
+            symbol: "^DJI",
+            name: "Dow Jones Industrial Average",
+            price: 0,
+          },
+          {
+            symbol: "^IXIC",
+            name: "NASDAQ Composite",
+            price: 0,
+          },
+          {
+            symbol: "QQQ",
+            name: "Invesco QQQ Trust",
+            price: 0,
+          },
+          {
+            symbol: "^SPX",
+            name: "S&P 500",
+            price: 0,
+          },          
+          {
+            symbol: "SPY",
+            name: "SPDR S&P 500 ETF Trust",
+            price: 0,
+          },
+          {
             symbol: "AAPL",
             name: "Apple Inc.",
-            price: 151.98,
+            price: 0,
           },
           {
             symbol: "TSLA",
             name: "Tesla, Inc.",
-            price: 1229.91,
+            price: 0,
           },
           {
             symbol: "FB",
             name: "Meta Platforms, Inc.",
-            price: 335.85,
-          },
-          {
-            symbol: "SPY",
-            name: "SPDR S&P 500 ETF Trust",
-            price: 466.91,
-          },
-                  {
-            symbol: "QQQ",
-            name: "Invesco QQQ Trust",
-            price: 398.22,
+            price: 0,
           },
           {
             symbol: "SE",
@@ -69,18 +76,6 @@ export default {
             name: "Netflix, Inc.",
             price: 668.42,
           },
-        ],
-        market_data: [],
-        symbols: [
-          "AAPL",
-          "MSFT",
-          "TSLA",
-          "FB",
-          "SPY",
-          "QQQ",
-          "SE",
-          "AMD",
-          "NFLX",
         ],
       };
     },
@@ -113,20 +108,20 @@ export default {
         //   this.market_data.push(data);
         // })
 
-        for (let i = 0; i < this.symbols.length; i++) {
-          const symbol = this.symbols[i];
-          yahooFinance.quote({
-            symbol: symbol,
-            modules: ["price"],
-          }).then((quote) => {
-            let price = quote.price.regularMarketPrice;
-            let stock_data = {
-              symbol: symbol,
-              price: price,
-            };
-            this.market_data.push(stock_data);
-          });
-        }
+        // for (let i = 0; i < this.symbols.length; i++) {
+        //   const symbol = this.symbols[i];
+        //   yahooFinance.quote({
+        //     symbol: symbol,
+        //     modules: ["price"],
+        //   }).then((quote) => {
+        //     let price = quote.price.regularMarketPrice;
+        //     let stock_data = {
+        //       symbol: symbol,
+        //       price: price,
+        //     };
+        //     this.market_data.push(stock_data);
+        //   });
+        // }
       },
 
       async displayMarketData() {
@@ -162,9 +157,13 @@ export default {
         // }
       },
     },
-    mounted() {
+    beforeMount() {
       this.fetchData();
       this.displayMarketData();
+    },
+    mounted() {
+      // this.fetchData();
+      // this.displayMarketData();
     },
 }
 </script>
